@@ -1,0 +1,21 @@
+No se como se hace una memoria de proyecto, nunca he hecho una.
+
+Lo que yo he hecho es:
+
+Por la parte de html, un lista desplegable con las opciones que puede meter el usuario en el formulario,
+un boton de terminar para cuando el usuario acabe de introducir campos (este boton, ademas, debloquea al usuario
+la opcion de ponerle un nombre al boton de enviar), un div en el va el input en el que el usuario puede ponerle
+nombre a los campos del formulario y el formulario en si (sus elementos se meten por dom).
+
+Por la parte del script, tengo una funcion (que he hecho porque se repetia el codigo) que limpia los elementos
+hijo de cualquier padre que le pases por parametro. Esto lo he hecho para ir limpiando y que no quedara tan feo o sobrecargado.
+
+La siguiente funcion se invoca cuando se elige una opcion del desplegable. Esta, lo que hace es añadir al div
+un texto y un boton para que el usuario pueda ponerle nombre al campo (segun el elemento seleccionado en la lista).
+En caso de que el seleccionado sea una lista, un elemento exclusivo o un elemento no exclusivo, ademas de la caja del nombre, aparece una caja de texto para añadir los elementos
+de la lista (uno a uno los va guardando en un array).
+En esa funcion tambien esta el comportamiento del boton terminar, el cual cuando se le pulsa, bloquea la lista 
+desplegable y hace aparecer una caja de texto para poder ponerle el nombre al boton de enviar formulario.
+
+La ultima funcion, mediante un switch, se encarga de crear los componentes correspondientes segun el elemtento de la
+lista seleccionado.

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+	<body>
+		<div>
+			<select name="nuevos" id="elementos" onchange="labelMaker()">
+			   <option value="">Seleccionar nuevo</option> 
+			   <option value="texto">Campo de texto</option> 
+			   <option value="numero">Campo de número</option> 
+			   <option value="email">Campo para introducir email</option>
+			   <option value="seleccion">Lista de selección</option> 
+			   <option value="no-exclusivas">Campo para incluir unas opciones no exclusivas de selección</option> 
+			   <option value="exclusivas">Campo para incluir opciones exclusivas de selección</option> 
+			</select>
+			<button type="button" id="btnTerminar">Terminar</button>
+			<div id="lblDiv"></div>
+			<hr/>
+			<form method="post" action="#" id="formulario">
+				
+			</form>
+		</div>
+	</body>
+	
+	<script>
+		var select = document.getElementById('elementos');
+		var formulario = document.getElementById('formulario');
+		
+		var caja = document.createElement('input');
+		var lbl = document.createElement('label');
+		
+		function cleanChilds(parent){
+			while(parent.firstChild){
+				parent.removeChild(parent.firstChild);
+			}
+		}
+		
+		function labelMaker(){
+			var selectOptions = [];
+			var selectedOption = select.options[select.selectedIndex].value;
+			
+			//Obtenemos contenedor
+			var bloque = document.getElementById("lblDiv");
+			bloque.style.marginTop = "5%";
+			
+			//Creamos div auxiliar
+			var divAux = document.createElement("div");
+			divAux.style.padding = "15px 6px 15px 0";
+			divAux.style.border = "1px solid black";
+			divAux.style.marginBottom = "3%";
+			divAux.style.textAlign = "center";
+			
+			
+			//Creamos label
+			var lbl = document.createElement('label');
+			lbl.innerHTML = "Introduce el nombre del "+selectedOption+": ";
+			lbl.style.marginRight = "3%";
+			lbl.setAttribute("name","textoControl");
+			
+			//Creamos input
+			var caja = document.createElement('input');
+			caja.setAttribute("type","text");
+			caja.style.marginRight = "2%";
+			
+			//Creamos boton
+			var btn = document.createElement('button');
+			btn.setAttribute("type", "button");			
+			btn.onclick = function(){
+				var inputText = caja.value;
+				
+				if(selectedOption == null) return;
+				
+				if(inputText == ""){
+					console.log("campo vacio");
+					caja.setAttribute("placeholder","Debes escribir un valor");
+					return;
+				}
+				//console.log(selectedOption , inputText);
+				createComponent(selectedOption, inputText, selectOptions);
+				select.value = "";
+			};
+			btn.innerHTML = "Crear Componente";
+			
+			
+			//Creamos componente
+			divAux.appendChild(lbl);
+			divAux.appendChild(caja);
+			divAux.appendChild(btn);
+			
+			bloque.appendChild(divAux);
+			
+			if(selectedOption == "seleccion" || selectedOption == "no-exclusivas" || selectedOption == "exclusivas"){
+
+				var label = document.createElement("label");
+				label.innerHTML = "Selecciona una opcion: ";
+				label.style.marginRight = "3%";
+				label.style.marginLeft = "2%";
+				
+				var input = document.createElement("input");
+				input.style.marginRight = "2%";
+				
+				var btn = document.createElement("button");
+				btn.innerHTML = "Añadir elemento";
+				
+				btn.onclick = function(){
+					var inputValue = input.value;
+					
+					//console.log(inputValue);
+					
+					selectOptions.push(inputValue);
+					
+					input.value = "";
+					//console.log(selectOptions);
+				};
+				
+				
+				divAux.appendChild(label);
+				divAux.appendChild(input);
+				divAux.appendChild(btn);
+				
+				bloque.appendChild(divAux);
+			}
+			
+			//Creamos boton Enviar
+			var btnTerminar =  document.getElementById("btnTerminar");
+			btnTerminar.onclick = function(){
+				cleanChilds(bloque);
+				select.disabled = true;
+				
+				var lblBotonEnviar = document.createElement("label");
+				lblBotonEnviar.innerHTML = "Introduce el nombre del boton para enviar: ";
+				
+				var inputBtnEnviar = document.createElement("input");
+				inputBtnEnviar.setAttribute("type","text");
+				
+				var btnCrearComponente = document.createElement("button");
+				btnCrearComponente.setAttribute("type", "button");			
+				btnCrearComponente.onclick = function(){
+					cleanChilds(bloque);
+					btnTerminar.disabled = true;
+					createComponent("lastButton", inputBtnEnviar.value);
+				};
+				btnCrearComponente.innerHTML = "Crear Boton";
+				
+				bloque.appendChild(lblBotonEnviar);
+				bloque.appendChild(inputBtnEnviar);
+				bloque.appendChild(btnCrearComponente);
+			};
+		}
+		
+		function createComponent(selectedOption, inputText , selectOptions = []){
+			<!-- console.log("createComponent"); -->
+			<!-- console.log("selected option :" , selectedOption); -->
+			<!-- console.log("input text :" , inputText); -->
+			<!-- console.log(selectOptions); -->
+			
+			//Obtenemos el formulario actual
+			var formulario = document.getElementById('formulario');
+			formulario.style.display = "table";
+			
+			//Creamos div contenedor del componente elegido por el usuario
+			var contenedor = document.createElement("div");
+			contenedor.setAttribute("id","customDiv");
+			contenedor.style.margin = "5%";
+						
+			//Generamos componente personalizado	
+			switch(selectedOption){
+				case "texto":
+					var label = document.createElement("label");
+					var input = document.createElement("input");
+					
+					label.innerHTML = inputText;
+					input.setAttribute("type","text");
+					
+					contenedor.appendChild(label);
+					contenedor.appendChild(input);
+					formulario.appendChild(contenedor);
+					break;
+				
+				case "numero":
+					var label = document.createElement("label");
+					var input = document.createElement("input");
+					
+					label.innerHTML = inputText;
+					input.setAttribute("type","number");
+					
+					contenedor.appendChild(label);
+					contenedor.appendChild(input);
+					formulario.appendChild(contenedor);
+					break;
+					
+				case "email":
+					var label = document.createElement("label");
+					var input = document.createElement("input");
+					
+					label.innerHTML = inputText;
+					input.setAttribute("type","email");
+					
+					contenedor.appendChild(label);
+					contenedor.appendChild(input);
+					formulario.appendChild(contenedor);
+					break;
+					
+				case "seleccion":
+					var select = document.createElement("select");
+					var label = document.createElement("label");
+					
+					label.innerHTML = inputText;
+					
+					for(var i=0; i < selectOptions.length; i++){
+						var opcion = document.createElement("option");
+						opcion.value = selectOptions[i];
+						opcion.innerHTML = selectOptions[i];
+						select.appendChild(opcion);
+					}
+					contenedor.appendChild(label);
+					contenedor.appendChild(select);
+					formulario.appendChild(contenedor);
+					break;
+					
+				case "no-exclusivas":
+					var label = document.createElement("label");
+					label.innerHTML = inputText;
+					label.style.fontSize = "50px";
+					
+					contenedor.style.width = "100%";
+					contenedor.appendChild(label);
+					
+					
+					for(var i=0; i < selectOptions.length; i++){
+					
+						var noExclusiva = document.createElement("input");
+						noExclusiva.setAttribute("type","checkbox");
+						noExclusiva.value = selectOptions[i];
+						
+						var labelCheck = document.createElement("label");
+						labelCheck.innerHTML = selectOptions[i];
+						
+						var parrafo = document.createElement("p");
+						
+						parrafo.appendChild(noExclusiva);
+						parrafo.appendChild(labelCheck);
+						contenedor.appendChild(parrafo);
+					}
+					
+					formulario.appendChild(contenedor);
+					break;
+				
+				case "exclusivas":
+					var label = document.createElement("label");
+					label.innerHTML = inputText;
+					label.style.fontSize = "50px";
+					
+					contenedor.style.width = "100%";
+					contenedor.appendChild(label);
+					
+					
+					for(var i=0; i < selectOptions.length; i++){
+					
+						var exclusiva = document.createElement("input");
+						exclusiva.setAttribute("type","radio");
+						exclusiva.value = selectOptions[i];
+						exclusiva.name = inputText.replace(" ", "");
+						
+						var labelCheck = document.createElement("label");
+						labelCheck.innerHTML = selectOptions[i];
+						
+						var parrafo = document.createElement("p");
+						
+						parrafo.appendChild(exclusiva);
+						parrafo.appendChild(labelCheck);
+						contenedor.appendChild(parrafo);
+					}
+					
+					formulario.appendChild(contenedor);
+					break;
+				
+				case "lastButton":
+					var inputEnviar = document.createElement("input");
+					inputEnviar.setAttribute("type","submit");
+					inputEnviar.value = inputText;
+					
+					formulario.appendChild(inputEnviar);
+					break;
+			}
+				
+			//Vaciamos componente de creacion de label
+			var labelDiv = document.getElementById("lblDiv");
+			cleanChilds(labelDiv);
+		}
+	</script>
+</html>
